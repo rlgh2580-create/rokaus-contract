@@ -189,11 +189,72 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-screen p { font-size: 13px; color: #555; }
 
-  /* ── 반응형 ── */
-  @media (max-width: 520px) {
-    .wrap { padding: 16px 14px; }
-    h1 { font-size: 14px; letter-spacing: 1px; }
-    .sign-table { width: 85%; }
+  /* ── 반응형 모바일 ── */
+  @media (max-width: 600px) {
+    .wrap { padding: 12px 8px; }
+    h1 { font-size: 13px; letter-spacing: 0px; }
+
+    /* 테이블 → 카드형으로 전환 */
+    table, thead, tbody, tr { display: block; width: 100%; }
+
+    /* 사용자 정보 테이블 숨김 (고정값이라 불필요) */
+    tr:has(td:not(.val-cell):not(.hdr)) { }
+
+    /* hdr(사용자/근로자) 셀 숨김 */
+    td.hdr { display: none; }
+
+    /* 각 행을 카드처럼 */
+    tr { margin-bottom: 4px; }
+
+    /* 라벨 셀 */
+    td.lbl {
+      display: inline-block;
+      width: 70px;
+      font-size: 11px;
+      background: #ebebeb;
+      border-bottom: none;
+      vertical-align: middle;
+      padding: 4px 4px;
+    }
+
+    /* 값 셀 */
+    td.val-cell, td:not(.lbl):not(.hdr) {
+      display: inline-block;
+      width: calc(100% - 78px);
+      font-size: 12px;
+      vertical-align: middle;
+      padding: 4px 4px;
+    }
+
+    /* 입력 필드 크게 */
+    td.val-cell input[type=text],
+    td.val-cell input[type=email],
+    td.val-cell select {
+      font-size: 14px !important;
+      padding: 4px 2px !important;
+      width: 100% !important;
+      min-height: 28px;
+    }
+
+    /* 제2조 테이블 */
+    #fw-계약일 input[type=date] { font-size: 14px !important; }
+    #fw-출근시간 select, #fw-퇴근시간 select { font-size: 13px !important; }
+
+    /* 부서 선택 */
+    #부서 { width: 100% !important; font-size: 13px !important; padding: 6px !important; }
+
+    /* 서명란 */
+    .sign-table { width: 100% !important; }
+    .sign-table td { font-size: 11px; padding: 4px 4px; }
+    .agree-text { font-size: 10px; }
+
+    /* 제출 버튼 */
+    .btn-submit { width: 100%; padding: 14px; font-size: 15px; }
+
+    /* 조문 텍스트 */
+    .sec-body, .bullet { font-size: 11px; }
+    .sec-title { font-size: 12px; }
+    .note { font-size: 10px; }
   }
 </style>
 </head>
