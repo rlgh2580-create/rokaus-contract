@@ -1,0 +1,717 @@
+sign-table!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>근로계약서 작성 - 나인트리 프리미어 로카우스 호텔</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f4f4f0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 13px;
+    color: #111;
+    padding: 20px 12px 40px;
+  }
+
+  .wrap {
+    max-width: 740px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 28px 30px 30px;
+  }
+
+  /* ── 상단 ── */
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .top-row .wage-badge {
+    background: #1a3a6b;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+  }
+  .top-row .company-sel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .top-row .company-sel label { font-weight: 700; white-space: nowrap; }
+
+  h1 {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin: 4px 0 10px;
+  }
+
+  /* ── 테이블 ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 12px; }
+  td { border: 1px solid #555; padding: 4px 6px; vertical-align: middle; }
+  .lbl { background: #ebebeb; font-weight: 700; text-align: center; white-space: nowrap; width: 62px; }
+  .hdr { background: #d5d5d5; font-weight: 700; text-align: center; width: 28px; }
+
+  /* ── 입력 요소 ── */
+  input[type=text], input[type=email], select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    color: #1a5ca8;
+    padding: 0;
+  }
+  input[type=text]::placeholder,
+  input[type=email]::placeholder { color: #aaa; font-size: 11px; }
+  select { cursor: pointer; }
+  select option { color: #111; }
+
+  .field-wrap { position: relative; }
+  .field-wrap input, .field-wrap select { display: block; width: 100%; }
+  .err-msg {
+    display: none;
+    color: #c0392b;
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .field-err td.val-cell,
+  .field-err { background: #fff0f0 !important; }
+  .field-err .err-msg { display: block; }
+  .field-err input, .field-err select { color: #c0392b; }
+
+  /* ── 조문 ── */
+  .sec-title { font-weight: 700; font-size: 12.5px; margin: 6px 0 2px; }
+  .sec-body { font-size: 11.5px; line-height: 1.65; margin-bottom: 3px; padding-left: 2px; }
+  .ind { padding-left: 14px; }
+  .note { font-size: 11px; color: #444; margin: 2px 0 3px; }
+  .bullet { font-size: 11.5px; line-height: 1.6; padding-left: 8px; margin: 2px 0 4px; }
+
+  /* ── 서명란 ── */
+  .sign-area { margin-top: 8px; }
+  .sign-date { font-size: 12px; text-align: right; margin-bottom: 5px; color: #1a5ca8; font-weight: 600; }
+
+  .sign-table { width: 50%; margin-left: auto; }
+  .sign-table td { padding: 4px 8px; font-size: 15px; }
+  .stamp-cell { text-align: center; }
+  .stamp {
+    display: inline-block;
+    width: 38px; height: 38px;
+    border: 2px solid #8B2020;
+    border-radius: 50%;
+    color: #8B2020;
+    font-size: 6.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    padding-top: 9px;
+    box-sizing: border-box;
+    opacity: 0.8;
+  }
+
+  /* ── 동의 체크 ── */
+  .agree-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .agree-row input[type=checkbox] { display: none; }
+  .custom-checkbox {
+    width: 14px; height: 14px;
+    border: 1.5px solid #555;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: white;
+    font-size: 11px;
+    color: #1a5ca8;
+    font-weight: 700;
+  }
+  .agree-text { font-size: 11px; color: #333; }
+  .agree-err { display: none; color: #c0392b; font-size: 10px; font-weight: 600; margin-top: 2px; }
+  .agree-required .agree-err { display: block; }
+  .agree-required .custom-checkbox { border-color: #c0392b; }
+
+  /* ── 제출 버튼 ── */
+  .submit-wrap { text-align: center; margin-top: 16px; }
+  .btn-submit {
+    background: #1a3a6b;
+    color: white;
+    border: none;
+    padding: 12px 48px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: #0f2650; }
+  .btn-submit:disabled { background: #999; cursor: not-allowed; }
+
+  /* ── 완료 화면 ── */
+  .complete-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .complete-screen .icon { font-size: 52px; margin-bottom: 16px; }
+  .complete-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1a3a6b; }
+  .complete-screen p { font-size: 13px; color: #555; line-height: 1.7; }
+
+  /* ── 로딩 ── */
+  .loading-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 4px solid #ddd;
+    border-top-color: #1a3a6b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-screen p { font-size: 13px; color: #555; }
+
+  /* ── 반응형 ── */
+  @media (max-width: 520px) {
+    .wrap { padding: 16px 14px; }
+    h1 { font-size: 14px; letter-spacing: 1px; }
+    .sign-table { width: 85%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="formWrap">
+
+  <!-- 상단 -->
+  <div class="top-row">
+    <div class="company-sel">
+      <label>업체명 :</label>
+      <div class="field-wrap" id="fw-업체명">
+        <select id="업체명" onchange="clearErr('fw-업체명')">
+          <option value="">-- 선택 --</option>
+          <option>직고용</option>
+          <option>루틴</option>
+          <option>에이플러스코리아</option>
+          <option>데이에이전시</option>
+        </select>
+        <div class="err-msg">업체명을 선택해주세요</div>
+      </div>
+    </div>
+    <div class="wage-badge" id="wageBadge">시급 : 14,000원</div>
+  </div>
+
+  <h1>근 로 계 약 서 (일용직, 아르바이트)</h1>
+
+  <!-- 사용자/근로자 정보 -->
+  <table>
+    <colgroup>
+      <col style="width:28px">
+      <col style="width:62px">
+      <col>
+      <col style="width:72px">
+      <col>
+    </colgroup>
+    <tr>
+      <td class="hdr" rowspan="2">사<br>용<br>자</td>
+      <td class="lbl">대표자</td>
+      <td>이 원 문</td>
+      <td class="lbl">사업자등록번호</td>
+      <td>201-86-29638</td>
+    </tr>
+    <tr>
+      <td class="lbl">사업체명</td>
+      <td>㈜피앤에스</td>
+      <td class="lbl">주&nbsp;&nbsp;&nbsp;소</td>
+      <td>서울특별시 중구 명동10길 51</td>
+    </tr>
+    <tr>
+      <td class="hdr" rowspan="4">근<br>로<br>자</td>
+      <td class="lbl">성&nbsp;&nbsp;&nbsp;명</td>
+      <td class="val-cell" id="fw-성명">
+        <input type="text" id="성명" placeholder="이름 입력" oninput="clearErr('fw-성명')">
+        <div class="err-msg">성명을 입력해주세요</div>
+      </td>
+      <td class="lbl">주민등록번호</td>
+      <td class="val-cell" id="fw-주민번호">
+        <input type="text" id="주민번호" placeholder="000000-0000000" maxlength="14" oninput="fmtRRN(this)" onblur="validateRRN()">
+        <div class="err-msg" id="err-주민번호">형식을 확인해주세요</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">연&nbsp;락&nbsp;처</td>
+      <td class="val-cell" id="fw-연락처">
+        <input type="text" id="연락처" placeholder="010-0000-0000" maxlength="13" oninput="fmtPhone(this); clearErr('fw-연락처')">
+        <div class="err-msg">연락처를 입력해주세요</div>
+      </td>
+      <td class="lbl">은행명</td>
+      <td class="val-cell" id="fw-은행명">
+        <select id="은행명" onchange="clearErr('fw-은행명')">
+          <option value="">-- 선택 --</option>
+          <option>산업</option><option>기업</option><option>국민</option><option>외환</option>
+          <option>수협</option><option>농협</option><option>우리</option><option>SC제일</option>
+          <option>씨티</option><option>대구</option><option>부산</option><option>광주</option>
+          <option>제주</option><option>전북</option><option>경남</option><option>새마을금고</option>
+          <option>신용협동조합</option><option>상호저축은행</option><option>우체국</option>
+          <option>하나</option><option>신한</option><option>K뱅크</option>
+          <option>카카오뱅크</option><option>토스뱅크</option>
+        </select>
+        <div class="err-msg">은행을 선택해주세요</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">이&nbsp;메&nbsp;일</td>
+      <td class="val-cell" id="fw-이메일">
+        <input type="email" id="이메일" placeholder="example@email.com" oninput="clearErr('fw-이메일')">
+        <div class="err-msg" id="err-이메일">올바른 이메일을 입력해주세요</div>
+      </td>
+      <td class="lbl">계좌번호</td>
+      <td class="val-cell" id="fw-계좌번호">
+        <input type="text" id="계좌번호" placeholder="숫자만 입력" maxlength="16" oninput="numOnly(this); clearErr('fw-계좌번호')">
+        <div class="err-msg" id="err-계좌번호">10~16자리 숫자를 입력해주세요</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">주&nbsp;&nbsp;&nbsp;소</td>
+      <td class="val-cell" id="fw-주소">
+        <input type="text" id="주소" placeholder="상세주소 입력" oninput="clearErr('fw-주소')">
+        <div class="err-msg">주소를 입력해주세요</div>
+      </td>
+      <td class="lbl">계좌소유주</td>
+      <td class="val-cell" id="fw-계좌소유주">
+        <input type="text" id="계좌소유주" placeholder="예금주 이름" oninput="clearErr('fw-계좌소유주')">
+        <div class="err-msg">계좌소유주를 입력해주세요</div>
+      </td>
+    </tr>
+  </table>
+
+  <p class="note">※ 위 당사자는 상호 신뢰를 바탕으로 본 계약을 체결하고 성실히 이행하기로 합의한다.</p>
+
+  <!-- 제1조 -->
+  <p class="sec-title">제 1 조&nbsp;&nbsp;[근로장소 및 담당업무]</p>
+  <p class="sec-body ind">
+    (1) 근로장소 :
+    <span style="color:#1a5ca8;" id="display-근로장소">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</span>
+    &nbsp;&nbsp;담당업무 :
+    <span style="color:#1a5ca8;" id="display-담당업무">( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )</span>
+  </p>
+  <div id="fw-부서" style="padding-left:14px; margin-bottom:4px;">
+    <select id="부서" onchange="onDeptChange()" style="width:220px; border:1px solid #ccc; padding:3px 6px; font-family:inherit; font-size:12px; color:#1a5ca8;">
+      <option value="">-- 부서 선택 --</option>
+      <option value="식음-연회">식음 - 연회</option>
+      <option value="식음-아페티">식음 - 아페티</option>
+      <option value="조리운영-연회주방">조리운영 - 연회주방</option>
+      <option value="조리운영-아페티">조리운영 - 아페티</option>
+      <option value="조리운영-베이커리">조리운영 - 베이커리</option>
+    </select>
+    <div class="err-msg" id="err-부서" style="display:none; color:#c0392b; font-size:10px; font-weight:600;">부서를 선택해주세요</div>
+  </div>
+  <p class="sec-body ind">(2) "사용자"의 업무상 필요에 따른 변경 요구에 근로자는 정당한 이유가 없는 한 따라야 한다.</p>
+
+  <!-- 제2조 -->
+  <p class="sec-title">제 2 조&nbsp;&nbsp;[계약기간 및 근로시간]</p>
+  <table>
+    <tr>
+      <td class="lbl" style="width:90px;">계약기간(근로일)</td>
+      <td id="fw-계약일" colspan="3">
+        <input type="date" id="계약일" style="border:none; outline:none; font-family:inherit; font-size:12px; color:#1a5ca8; background:transparent;" onchange="clearErr('fw-계약일')">
+        <div class="err-msg">계약일을 선택해주세요</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">근로시간</td>
+      <td colspan="3">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <div id="fw-출근시간">
+            <select id="출근시간" style="border:none; outline:none; font-family:inherit; font-size:12px; color:#1a5ca8; background:transparent;" onchange="clearErr('fw-출근시간')">
+              <option value="">출근</option>
+            </select>
+            <div class="err-msg">출근시간 선택</div>
+          </div>
+          <span>~</span>
+          <div id="fw-퇴근시간">
+            <select id="퇴근시간" style="border:none; outline:none; font-family:inherit; font-size:12px; color:#1a5ca8; background:transparent;" onchange="clearErr('fw-퇴근시간')">
+              <option value="">퇴근</option>
+            </select>
+            <div class="err-msg">퇴근시간 선택</div>
+          </div>
+          <span>까지</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" style="font-size:11px;">
+        &nbsp;휴게시간은 1일 4시간 이상 근로 시 30분, 8시간 이상 근로 시 1시간 부여하며 근로시간에 포함하지 않는다. (휴게시간은 식사시간을 포함한다.)
+      </td>
+    </tr>
+  </table>
+  <p class="note">※ 계약기간 및 근로시간은 쌍방 합의에 의해 변경될 수 있다.</p>
+
+  <!-- 제3조 -->
+  <p class="sec-title">제 3 조&nbsp;&nbsp;[임금]</p>
+  <table>
+    <tr>
+      <td class="lbl" style="width:90px;">시간당 임금</td>
+      <td style="font-weight:700; width:70px; font-size:13px;" id="wageDisplay">14,000원</td>
+      <td style="font-size:11px;">임금지급은 근로일 단위 근로시간에 대하여 시간당 임금을 곱한 금액을 계산하여 근로일로부터 14일 이내에 근로자 개인 은행계좌로 지급한다.</td>
+    </tr>
+  </table>
+  <div class="bullet" id="wageDetail">
+    - 소정 근로시간은 1일 8시간으로 한다.<br>
+    - 시간당 임금은 14,000원 [기본시급 11,660원 + 주휴수당 2,340원]으로 한다.<br>
+    - 지급금액에 대한 제세공과금은 "근로자"가 부담한다.<br>
+    - 연장근로 및 야간근로(22:00~06:00)는 시급의 50%를 가산하여 지급한다.
+  </div>
+
+  <!-- 제4~7조 -->
+  <p class="sec-title">제 4 조&nbsp;&nbsp;[근로 조건]</p>
+  <div class="sec-body ind">
+    (1) 휴일 및 휴가에 관한 사항은 근로기준법 및 고용노동부 지침에 따른다.<br>
+    (2) "근로자"는 "사용자"의 정보유출방지 관련 제 규정을 준수하며 근무 중 습득하게 된 "사용자"의 모든 비밀자료나 정보를 근로 중 또는 종료 후 "사용자"의 서면 동의 없이 유출, 발설 공표하거나 다른 목적으로 사용을 금한다.<br>
+    (3) "근로자"는 정부의 감염병 관련 방역지침을 준수하고, 유증상시 즉각 업무 중단 후 "사용자"에게 보고하며, 미준수시 법적 책임을 진다.<br>
+    (4) 4대 보험업무 및 임금지급과 관련하여 "사용자"의 인력소개업체 및 근로소득관련 납부기관에 제공할 수 있도록 개인정보활용 제공에 동의한다.
+  </div>
+
+  <p class="sec-title">제 5 조&nbsp;&nbsp;[퇴직 및 계약해지]</p>
+  <p class="sec-body ind">본 고용계약은 1일 단위로 만료됨을 원칙하며 "사용자"는 "근로자"가 정당한 업무명령을 거부하거나 불이행 및 고의, 중대한 과실 등으로 사고나 손실을 야기시킨 경우에는 근로계약을 해지할 수 있다.</p>
+
+  <p class="sec-title">제 6 조&nbsp;&nbsp;[손해배상]</p>
+  <p class="sec-body ind">"근로자"가 고의 또는 중과실로 "사용자"에게 재산상의 손해를 끼쳤을 경우 이에 따른 손해배상 책임을 진다.</p>
+
+  <p class="sec-title">제 7 조&nbsp;&nbsp;[준용]</p>
+  <p class="sec-body ind">본 계약서에 명시되지 않은 사항은 관계법령에 따른다.</p>
+
+  <p class="note">※ 본 계약서는 2부를 작성하여 각자 1부씩 보관하여 본 계약서 1부를 교부 받았으며 이를 확인함.</p>
+
+  <!-- 서명란 -->
+  <div class="sign-area">
+    <div class="sign-date">일&nbsp;&nbsp;자 :&nbsp;&nbsp;<span id="signDate" style="color:#1a5ca8;">　　　　　　</span></div>
+    <table class="sign-table">
+      <colgroup>
+        <col style="width:58px">
+        <col>
+        <col style="width:45%">
+      </colgroup>
+      <tr>
+        <td class="lbl">사용자</td>
+        <td style="text-align:center;">이 원 문</td>
+        <td class="stamp-cell"><div class="stamp">로카우스<br>직인</div></td>
+      </tr>
+      <tr>
+        <td class="lbl">근로자</td>
+        <td style="text-align:center; color:#1a5ca8;" id="signName">　</td>
+        <td style="text-align:center; padding:4px;">
+          <div id="agreeWrap">
+            <div class="agree-row" onclick="toggleAgree()" style="cursor:pointer;">
+              <span class="custom-checkbox" id="chkBox"></span>
+              <span class="agree-text">상기 내용을 충분히 읽고 동의 합니다</span>
+            </div>
+            <div class="agree-err" id="agreeErr">동의가 필요합니다</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 제출 -->
+  <div class="submit-wrap">
+    <button class="btn-submit" id="submitBtn" onclick="submitForm()">계약서 제출</button>
+  </div>
+
+</div>
+
+<!-- 로딩 -->
+<div class="wrap loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <p>계약서를 처리 중입니다.<br>잠시만 기다려주세요...</p>
+</div>
+
+<!-- 완료 -->
+<div class="wrap complete-screen" id="completeScreen">
+  <div class="icon">✅</div>
+  <h2>근로계약서 작성이 완료되었습니다</h2>
+  <p id="completeMsg">입력하신 이메일로 계약서 PDF가 발송되었습니다.<br>확인 부탁드립니다.</p>
+</div>
+
+<script>
+// ── 설정값 (시급별로 이 부분만 변경) ──
+const WAGE_CONFIG = {
+  hourlyWage: '14,000',
+  basicWage:  '11,660',
+  weeklyWage: '2,340',
+  APPS_SCRIPT_URL: 'YOUR_APPS_SCRIPT_URL_HERE' // ← 배포 후 입력
+};
+
+// ── 시급 표시 ──
+document.getElementById('wageBadge').textContent = '시급 : ' + WAGE_CONFIG.hourlyWage + '원';
+document.getElementById('wageDisplay').textContent = WAGE_CONFIG.hourlyWage + '원';
+document.getElementById('wageDetail').innerHTML =
+  '- 소정 근로시간은 1일 8시간으로 한다.<br>' +
+  '- 시간당 임금은 ' + WAGE_CONFIG.hourlyWage + '원 [기본시급 ' + WAGE_CONFIG.basicWage + '원 + 주휴수당 ' + WAGE_CONFIG.weeklyWage + '원]으로 한다.<br>' +
+  '- 지급금액에 대한 제세공과금은 "근로자"가 부담한다.<br>' +
+  '- 연장근로 및 야간근로(22:00~06:00)는 시급의 50%를 가산하여 지급한다.';
+
+// ── 출퇴근 시간 드롭다운 생성 (06:00~24:00, 30분 단위) ──
+function buildTimeOptions(selId) {
+  const sel = document.getElementById(selId);
+  const label = selId === '출근시간' ? '출근' : '퇴근';
+  sel.innerHTML = '<option value="">-- ' + label + ' --</option>';
+  for (let h = 6; h <= 24; h++) {
+    for (let m of [0, 30]) {
+      if (h === 24 && m === 30) break;
+      const hh = String(h).padStart(2,'0');
+      const mm = String(m).padStart(2,'0');
+      const val = hh + ':' + mm;
+      sel.innerHTML += '<option value="' + val + '">' + val + '</option>';
+    }
+  }
+}
+buildTimeOptions('출근시간');
+buildTimeOptions('퇴근시간');
+
+// ── 성명 → 서명란 실시간 반영 ──
+document.getElementById('성명').addEventListener('input', function() {
+  document.getElementById('signName').textContent = this.value || '　';
+});
+
+// ── 계약일 → 서명 일자 반영 ──
+document.getElementById('계약일').addEventListener('change', function() {
+  document.getElementById('signDate').textContent = this.value || '　';
+  clearErr('fw-계약일');
+});
+
+// ── 부서 선택 → 근로장소/담당업무 자동 세팅 ──
+const deptMap = {
+  '식음-연회':      { place: '식음 - 연회',      duty: '서빙 및 기타잡무' },
+  '식음-아페티':    { place: '식음 - 아페티',    duty: '서빙 및 기타잡무' },
+  '조리운영-연회주방': { place: '조리운영 - 연회주방', duty: '주방 보조' },
+  '조리운영-아페티':  { place: '조리운영 - 아페티',  duty: '주방 보조' },
+  '조리운영-베이커리':{ place: '조리운영 - 베이커리', duty: '주방 보조' },
+};
+function onDeptChange() {
+  const val = document.getElementById('부서').value;
+  const d = deptMap[val];
+  if (d) {
+    document.getElementById('display-근로장소').textContent = '( ' + d.place + ' )';
+    document.getElementById('display-담당업무').textContent = '( ' + d.duty + ' )';
+  } else {
+    document.getElementById('display-근로장소').textContent = '( 　 )';
+    document.getElementById('display-담당업무').textContent = '( 　 )';
+  }
+  document.getElementById('err-부서').style.display = 'none';
+}
+
+// ── 주민번호 포맷 & 검증 ──
+function fmtRRN(input) {
+  let v = input.value.replace(/[^0-9]/g, '');
+  if (v.length > 6) v = v.slice(0,6) + '-' + v.slice(6,13);
+  input.value = v;
+  clearErr('fw-주민번호');
+}
+function validateRRN() {
+  const v = document.getElementById('주민번호').value.replace('-','');
+  const fw = document.getElementById('fw-주민번호');
+  const err = document.getElementById('err-주민번호');
+  if (v.length !== 13) { showFieldErr(fw, err, '13자리를 입력해주세요'); return false; }
+  const month = parseInt(v.slice(2,4));
+  const day   = parseInt(v.slice(4,6));
+  const gCode = parseInt(v[6]);
+  const validCodes = [1,2,3,4,5,6,7,8,9,0];
+  if (month < 1 || month > 12) { showFieldErr(fw, err, '생년월일을 확인해주세요'); return false; }
+  if (day < 1 || day > 31)     { showFieldErr(fw, err, '생년월일을 확인해주세요'); return false; }
+  if (!validCodes.includes(gCode)) { showFieldErr(fw, err, '주민번호 뒷자리를 확인해주세요'); return false; }
+  // 연도·성별코드 교차 검증
+  const yy = parseInt(v.slice(0,2));
+  const is1900 = [1,2,5,6].includes(gCode);
+  const is2000 = [3,4,7,8].includes(gCode);
+  const is1800 = [9,0].includes(gCode);
+  // 연도 추정: gCode로 판단
+  if (!is1900 && !is2000 && !is1800) { showFieldErr(fw, err, '성별코드를 확인해주세요'); return false; }
+  clearErr('fw-주민번호');
+  return true;
+}
+function showFieldErr(fw, errEl, msg) {
+  fw.classList.add('field-err');
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+}
+
+// ── 전화번호 포맷 ──
+function fmtPhone(input) {
+  let v = input.value.replace(/[^0-9]/g,'');
+  if (v.length <= 3) input.value = v;
+  else if (v.length <= 7) input.value = v.slice(0,3)+'-'+v.slice(3);
+  else input.value = v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+}
+
+// ── 숫자만 ──
+function numOnly(input) {
+  input.value = input.value.replace(/[^0-9]/g,'');
+}
+
+// ── 에러 초기화 ──
+function clearErr(fwId) {
+  const el = document.getElementById(fwId);
+  if (el) el.classList.remove('field-err');
+}
+
+// ── 동의 토글 ──
+let agreed = false;
+function toggleAgree() {
+  agreed = !agreed;
+  document.getElementById('chkBox').textContent = agreed ? '✓' : '';
+  document.getElementById('agreeWrap').classList.remove('agree-required');
+}
+
+// ── 유효성 검사 ──
+function validate() {
+  let ok = true;
+
+  const required = [
+    { id:'fw-업체명',     field:'업체명',    type:'select' },
+    { id:'fw-성명',       field:'성명',      type:'text' },
+    { id:'fw-연락처',     field:'연락처',    type:'text' },
+    { id:'fw-이메일',     field:'이메일',    type:'email' },
+    { id:'fw-은행명',     field:'은행명',    type:'select' },
+    { id:'fw-계좌번호',   field:'계좌번호',  type:'text' },
+    { id:'fw-주소',       field:'주소',      type:'text' },
+    { id:'fw-계좌소유주', field:'계좌소유주',type:'text' },
+    { id:'fw-계약일',     field:'계약일',    type:'date' },
+    { id:'fw-출근시간',   field:'출근시간',  type:'select' },
+    { id:'fw-퇴근시간',   field:'퇴근시간',  type:'select' },
+  ];
+
+  required.forEach(r => {
+    const el = document.getElementById(r.field);
+    const fw = document.getElementById(r.id);
+    if (!el || !el.value.trim()) {
+      fw.classList.add('field-err');
+      ok = false;
+    }
+  });
+
+  // 부서 확인
+  if (!document.getElementById('부서').value) {
+    document.getElementById('err-부서').style.display = 'block';
+    ok = false;
+  }
+
+  // 이메일 형식
+  const email = document.getElementById('이메일').value;
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const fw = document.getElementById('fw-이메일');
+    const err = document.getElementById('err-이메일');
+    fw.classList.add('field-err');
+    err.textContent = '올바른 이메일 형식을 입력해주세요';
+    ok = false;
+  }
+
+  // 계좌번호 자릿수
+  const acc = document.getElementById('계좌번호').value;
+  if (acc && (acc.length < 10 || acc.length > 16)) {
+    const fw = document.getElementById('fw-계좌번호');
+    const err = document.getElementById('err-계좌번호');
+    fw.classList.add('field-err');
+    err.textContent = '10~16자리 숫자를 입력해주세요';
+    ok = false;
+  }
+
+  // 주민번호
+  if (!validateRRN()) ok = false;
+
+  // 동의
+  if (!agreed) {
+    document.getElementById('agreeWrap').classList.add('agree-required');
+    ok = false;
+  }
+
+  return ok;
+}
+
+// ── 제출 ──
+async function submitForm() {
+  if (!validate()) {
+    // 첫 에러 항목으로 스크롤
+    const firstErr = document.querySelector('.field-err');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const dept = document.getElementById('부서').value;
+  const deptInfo = deptMap[dept];
+  const payload = {
+    timestamp:    new Date().toISOString(),
+    업체명:       document.getElementById('업체명').value,
+    성명:         document.getElementById('성명').value,
+    주민번호:     document.getElementById('주민번호').value,
+    연락처:       document.getElementById('연락처').value,
+    이메일:       document.getElementById('이메일').value,
+    은행명:       document.getElementById('은행명').value,
+    계좌번호:     document.getElementById('계좌번호').value,
+    계좌소유주:   document.getElementById('계좌소유주').value,
+    주소:         document.getElementById('주소').value,
+    우편번호:     '11111',
+    우편번호주소: '111',
+    근로장소:     deptInfo.place,
+    담당업무:     deptInfo.duty,
+    부서:         dept,
+    계약일:       document.getElementById('계약일').value,
+    출근시간:     document.getElementById('출근시간').value,
+    퇴근시간:     document.getElementById('퇴근시간').value,
+    시급:         WAGE_CONFIG.hourlyWage,
+    동의:         '상기 내용을 충분히 읽고 동의 합니다',
+  };
+
+  // 화면 전환
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('loadingScreen').style.display = 'block';
+
+  try {
+    const res = await fetch(WAGE_CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json();
+
+    document.getElementById('loadingScreen').style.display = 'none';
+
+    if (result.status === 'success') {
+      document.getElementById('completeScreen').style.display = 'block';
+      document.getElementById('completeMsg').innerHTML =
+        payload.성명 + ' 님의 근로계약서가 <b>' + payload.이메일 + '</b> 으로 발송되었습니다.<br>확인 부탁드립니다.';
+    } else {
+      throw new Error(result.message || '오류');
+    }
+  } catch(e) {
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('formWrap').style.display = 'block';
+    // 이메일 오류 표시
+    const fw = document.getElementById('fw-이메일');
+    const err = document.getElementById('err-이메일');
+    fw.classList.add('field-err');
+    err.textContent = '발송에 실패했습니다. 이메일 주소를 다시 확인해주세요';
+    fw.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+}
+</script>
+</body>
+</html>
